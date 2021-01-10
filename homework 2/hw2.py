@@ -33,8 +33,8 @@ class House:
 
     @discount.setter
     def discount(self, discount):
-        if discount < 0:
-            raise Exception("Discount is negative")
+        if not (discount > 0) and (discount < 1):
+            raise Exception("Discount should be from 0 to 1")
         else:
             self._discount = discount
 
