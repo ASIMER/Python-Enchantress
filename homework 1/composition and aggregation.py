@@ -28,5 +28,6 @@ class Guitare:
         self.strings_list = strings_list
 
 
-strings = [String('guitar_string') for i in range(7)]
-Guitare(strings)
+if __name__ == '__main__':
+    strings = [String('guitar_string') for i in range(7)]
+    Guitare(strings)

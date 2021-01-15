@@ -2,19 +2,25 @@ from abc import ABC, abstractmethod
 from random import randint
 from datetime import date
 from threading import Lock
+from homework_2.exceptions import *
 
+# all houses stored in set, because order is not important
 HOUSES = set()
+# all realtors stored in set, because order is not important.
+# unless realtors is singleton, I want to create scalable code
 REALTORS = set()
 
 
 class House:
-    _cost = 20000
-    _area = 40
-    _discount: float = 0
+    """House class, which describe simple house
+    cost - how much one house cost in $, can't be less than 20000$,
+    area - house area, can't be less than 40 square meters,
+    discount - house discount, which can be from 0% to 100% of house cost"""
 
-    def __init__(self, cost, area):
+    def __init__(self, cost, area, discount = 0):
         self.cost = cost
         self.area = area
+        self.discount = discount
 
     @property
     def area(self):
@@ -23,7 +29,7 @@ class House:
     @area.setter
     def area(self, area):
         if area < 40:
-            raise Exception("House too small")
+            raise HouseToSmallError
         else:
             self._area = area
 
@@ -33,8 +39,8 @@ class House:
 
     @discount.setter
     def discount(self, discount):
-        if not (discount > 0) and (discount < 1):
-            raise Exception("Discount should be from 0 to 1")
+        if not (discount >= 0) and (discount <= 1):
+            raise DiscountValueError
         else:
             self._discount = discount
 
@@ -45,17 +51,24 @@ class House:
     @cost.setter
     def cost(self, cost):
         if cost < 20000:
-            Exception("House too low cost")
+            raise HouseCostError
         else:
             self._cost = cost
 
 
 class Human(ABC):
+    """Human abstract class,
+    money - start capital,
+    name - human name,
+    birth_date - date of birth, datetime,
+    buildings - set of buildings (houses etc)"""
     # save money
-    money = 0
     buildings = set()
-    name: str
-    _birth_date: date
+
+    def __init__(self, name, birth_date, money):
+        self.name = name
+        self.birth_date = birth_date
+        self.money = money
 
     @property
     def birth_date(self):
@@ -65,7 +78,7 @@ class Human(ABC):
     def birth_date(self, birth_date: date):
         birth = date.today() - birth_date
         if birth.days <= 0:
-            raise Exception('too low birth date')
+            raise HumanBirthDateError
         else:
             self._birth_date = birth_date
 
@@ -75,7 +88,7 @@ class Human(ABC):
 
     def buy_house(self, house: House):
         if self.money < house.cost:
-            raise Exception("Human hasn't enough money")
+            raise HumanNoMoneyError
         self.money -= house.cost
         self.buildings.add(house)
         HOUSES.discard(house)
@@ -111,25 +124,28 @@ class RealtorMeta(type):
 
 
 class Person(Human):
-    def __init__(self, name, birth_date, money):
-        self.name = name
-        self.birth_date = birth_date
-        self.money = money
-
+    """simple person class,
+    only can buy houses or get them without buying (presents),
+    also can make_money, but job not implemented yet
+    """
     def make_money(self, salary):
         self.money += salary
 
 
 class Realtor(Human):
+    """Realtor class (singleton),
+    money - start capital,
+    name - human name,
+    birth_date - date of birth, datetime,
+    buildings - set of buildings (houses etc),
+    houses_for_sell - set of houses which realtor can sell
+    """
     __metaclass__ = RealtorMeta
     houses_for_sell = set()
 
-    def __init__(self, name, birth_date, money):
-        self.name = name
-        self.birth_date = birth_date
-        self.money = money
-
     def sell_house(self, house: House, person: Person):
+        # sell house to person, with cash withdraw
+        # applies discount for house cost (in property method)
         salary = 0
         # steal money with 10% chance
         if randint(1, 101) < 10:
@@ -142,6 +158,7 @@ class Realtor(Human):
         self.houses_for_sell.discard(house)
 
     def get_discounts(self):
+        # return realtor houses discounts
         return [house.discount for house in self.houses_for_sell]
 
     def add_house_to_sell(self, house: House):
@@ -163,6 +180,6 @@ if __name__ == '__main__':
                      birth_date=date(year=1998, day=11, month=11),
                      money=99999)
     HOUSES.add(House(99999, 45))
-    HOUSES.add(House(9999, 46))
-    HOUSES.add(House(9999, 48))
-    HOUSES.add(House(9999, 90))
+    HOUSES.add(House(99999, 46))
+    HOUSES.add(House(99999, 48))
+    HOUSES.add(House(99999, 90))

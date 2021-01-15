@@ -11,10 +11,10 @@ class Food:
     pass
 
 
-class Cheburek(food,
-               metaclass=MetaCheburek):
+class Cheburek(food, metaclass=MetaCheburek):
     pass
 
 
-print('class object', Cheburek)
-print('object', Cheburek())
+if __name__ == '__main__':
+    print('class object', Cheburek)
+    print('object', Cheburek())
