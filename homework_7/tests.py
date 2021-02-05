@@ -64,14 +64,14 @@ class DBTests(unittest.TestCase):
         create_user(user_info)
         self.user_id = get_user_id(user_info)[0][0]
         self.assertEqual(
-                read_user_info(self.user_id)[0],
-                (
-                        self.user_id,
-                        self.cart_user_name,
-                        self.user_email,
-                        self.user_registration_time
-                        )
-                )
+            read_user_info(self.user_id)[0],
+            (
+            self.user_id,
+            self.cart_user_name,
+            self.user_email,
+            self.user_registration_time
+            )
+        )
 
         # save cart info into dict
         cart_info = {
