@@ -1,12 +1,13 @@
 import unittest
 from datetime import datetime
 from hw_functions import *
+from random import randint
 
 class DBTests(unittest.TestCase):
     def setUp(self) -> None:
         # save user info
-        self.user_name = 'name19'
-        self.cart_user_name = 'cart_name24'
+        self.user_name = 'name' + str(randint(-99999, 99999))
+        self.cart_user_name = 'cart_name' + str(randint(-99999, 99999))
         self.user_email = 'test@gmail.com'
         self.user_registration_time = datetime.today()
 
