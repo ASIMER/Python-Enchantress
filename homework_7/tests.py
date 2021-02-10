@@ -1,13 +1,14 @@
 import unittest
 from datetime import datetime
+
 from hw_functions import *
-from random import randint
+
 
 class DBTests(unittest.TestCase):
     def setUp(self) -> None:
         # save user info
-        self.user_name = 'name' + str(randint(-99999, 99999))
-        self.cart_user_name = 'cart_name' + str(randint(-99999, 99999))
+        self.user_name = 'test  name'
+        self.cart_user_name = 'test  cart_name'
         self.user_email = 'test@gmail.com'
         self.user_registration_time = datetime.today()
 
@@ -117,9 +118,16 @@ class DBTests(unittest.TestCase):
         self.assertEqual(read_cart(self.cart_id), [])
 
         # delete user
-        print(self.user_id)
         delete_user(self.user_id)
         self.assertEqual(read_user_info(self.user_id), [])
+
+    def tearDown(self) -> None:
+        if hasattr(self, 'cart_id'):
+            delete_cart(self.cart_id)
+
+        if hasattr(self, 'user_id'):
+            delete_user(self.user_id)
+
 
 
 if __name__ == '__main__':

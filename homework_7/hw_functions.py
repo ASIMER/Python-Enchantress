@@ -19,15 +19,16 @@ def conn_mgr(func):
     def wrapper(*args, **kwargs):
         conn = psycopg2.connect(**db_info)
         cursor = conn.cursor()
+        try:
+            if 'conn' in func.__code__.co_varnames:
+                # check function parameter names, for conn parameter
+                result = func(*args, cursor=cursor, conn=conn, **kwargs)
+            else:
+                result = func(*args, cursor=cursor, **kwargs)
 
-        if 'conn' in func.__code__.co_varnames:
-            # check function parameter names, for conn parameter
-            result = func(*args, cursor=cursor, conn=conn, **kwargs)
-        else:
-            result = func(*args, cursor=cursor, **kwargs)
-
-        conn.commit()
-        conn.close()
+            conn.commit()
+        finally:
+            conn.close()
         return result
     return wrapper
 
