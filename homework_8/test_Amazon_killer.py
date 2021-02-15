@@ -20,7 +20,6 @@ def test_create_user(store_app):
                     "name": "Illia",
                     "email": "illia.sukonnik@gmail.com",
                     })
-
     # response /users
     assert response.status_code == 201
     assert response.json == {
