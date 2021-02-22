@@ -81,4 +81,3 @@ def test_delete_user(store_app):
     assert response.json == {
             "status": "success"
             }
-

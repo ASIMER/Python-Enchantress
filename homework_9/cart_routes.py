@@ -48,4 +48,3 @@ class Cart(Resource):
         else:
             db_mapping.CARTS_TABLE.pop(cart_id)
             return {"status": "success"}, 200
-
