@@ -44,10 +44,14 @@ def parse(text: bytes, grab_headers: bool = False) -> list or dict:
             header = findall('[^\d. ][\w\- ]*', child.text)[0]
         elif child.name == 'p':
             email = findall('([ \w]*).([\w\-]*@[\w\-.]*)', child.text)
+
+            # check if pattern match successfully
             if email:
                 email = email[0]
             else:
                 continue
+
+            # check if we want get headers from site
             if grab_headers:
                 if header in result:
                     result[header].append((email[0], email[1]))
