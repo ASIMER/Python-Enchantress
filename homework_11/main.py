@@ -9,6 +9,12 @@ link = "http://socrates.vsau.org/wiki/index.php/%D0%A1%D0%BF%D0%B8%D1%81" \
 
 
 def load_site(address: str) -> bytes:
+    """
+    this function downloads site content
+
+    :param address: str
+    :return: bytes
+    """
     from requests import request
 
     response = request(method="GET", url=address)
@@ -16,21 +22,21 @@ def load_site(address: str) -> bytes:
     return response.content
 
 
-def parse(text: bytes, grab_headers=False):
+def parse(text: bytes, grab_headers: bool = False) -> list or dict:
     """
+    this function parse site context, and create dict or list with emails
 
-    :param text: site content
-    :param grab_headers: site content
-    :return:
+    :param text: bytes - site content
+    :param grab_headers: bool - headers grab switch
+    :return: dict or list
     """
     from bs4 import BeautifulSoup
     from re import findall
 
     soup = BeautifulSoup(text, 'html.parser')
-    counter = 0
     header = ''
-    emails = []
     result = {} if grab_headers else []
+
     for child in soup.find(id='mw-content-text'):
         if child == '\n':
             continue
@@ -51,6 +57,7 @@ def parse(text: bytes, grab_headers=False):
                 result.append((email[0], email[1]))
 
     return result
+
 
 if __name__ == '__main__':
 
