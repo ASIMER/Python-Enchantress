@@ -1,3 +1,7 @@
+from bs4 import BeautifulSoup
+from re import findall
+from requests import request
+
 link = "http://socrates.vsau.org/wiki/index.php/%D0%A1%D0%BF%D0%B8%D1%81" \
        "%D0%BE%D0%BA_%D0%B0%D0%B4%D1%80%D0%B5%D1%81_%D0%B5%D0%BB%D0%B5" \
        "%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%BD%D0%B8%D1%85_%D0%BF%D0%BE%D1" \
@@ -15,7 +19,6 @@ def load_site(address: str) -> bytes:
     :param address: str
     :return: bytes
     """
-    from requests import request
 
     response = request(method="GET", url=address)
 
@@ -30,8 +33,6 @@ def parse(text: bytes, grab_headers: bool = False) -> list or dict:
     :param grab_headers: bool - headers grab switch
     :return: dict or list
     """
-    from bs4 import BeautifulSoup
-    from re import findall
 
     soup = BeautifulSoup(text, 'html.parser')
     header = ''
