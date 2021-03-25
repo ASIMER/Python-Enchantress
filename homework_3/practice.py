@@ -47,8 +47,3 @@ class HenHouse:
             return int(page.text[10])
         else:
             raise ConnectionError()
-
-test = """asdkasjlkdasjldkasd
-asdasjdashdjkasdjkas
-sadhasjkdasjkd"""
-print(test)
